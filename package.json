@@ -8,7 +8,9 @@
     "start": "node server",
     "build": "webpack --config build/webpack.prod.conf.js --progress --hide-modules",
     "test": "webpack --config build/webpack.test.conf.js --progress --hide-modules",
-    "clean": "rm -fr dist"
+    "clean": "rm -fr dist",
+    "tag": "node .tag",
+    "tag:delete": "git tag -d $1 && git push origin --delete tag $1"
   },
   "babel": {
     "presets": [
