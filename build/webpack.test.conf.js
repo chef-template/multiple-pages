@@ -4,6 +4,7 @@ const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin')
+const UglifyPlugin = require('webpack-parallel-uglify-plugin')
 
 const root = process.cwd()
 let config = require('./config')
@@ -16,7 +17,7 @@ module.exports =  {
   output: {
     path: join(root, 'dist'),
     filename: `js/[name].[hash:7].js`,
-    publicPath: '/channel-manage/'
+    publicPath: '/'
   },
   resolve: {
     extensions: ['.js', '.json', '.css', '.vue'],
@@ -84,9 +85,10 @@ module.exports =  {
         NODE_ENV: JSON.stringify('test')
       }
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
+    new UglifyPlugin({
+      workCount: 2,
+      uglifyJS: {
+        'support-ie8': true
       }
     })
   ])
