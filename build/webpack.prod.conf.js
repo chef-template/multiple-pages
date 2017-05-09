@@ -85,6 +85,7 @@ module.exports = {
         NODE_ENV: JSON.stringify('production')
       }
     }),
+    // Thanks: https://github.com/mishoo/UglifyJS2
     new UglifyPlugin({
       workCount: 2,
       uglifyJS: {
