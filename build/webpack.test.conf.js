@@ -4,7 +4,6 @@ const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin')
-const UglifyPlugin = require('webpack-parallel-uglify-plugin')
 
 const root = process.cwd()
 let config = require('./config')
@@ -12,7 +11,7 @@ let Package = require('../package.json')
 let version = Package.version
 let name = Package.name
 
-module.exports =  {
+module.exports = {
   entry: config.entries,
   output: {
     path: join(root, 'dist'),
@@ -30,7 +29,12 @@ module.exports =  {
     rules: [
       {
         test: /\.js$/,
-        use: 'babel-loader',
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            presets: [['es2015', {loose: true}]]
+          }
+        }],
         exclude: /node_modules/
       },
       {
@@ -56,7 +60,7 @@ module.exports =  {
             name: `img/[name].[hash:7].[ext]`
           }
         }]
-      }, 
+      },
       {
         test: /\.(eot|ttf|woff|woff2|svg|svgz)$/,
         use: [{
@@ -83,12 +87,6 @@ module.exports =  {
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify('test')
-      }
-    }),
-    new UglifyPlugin({
-      workCount: 2,
-      uglifyJS: {
-        'support-ie8': true
       }
     })
   ])

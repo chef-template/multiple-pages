@@ -4,7 +4,6 @@ const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const CommonsChunkPlugin = require('webpack/lib/optimize/CommonsChunkPlugin')
-const UglifyPlugin = require('webpack-parallel-uglify-plugin')
 
 const root = process.cwd()
 let config = require('./config')
@@ -83,13 +82,6 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify('production')
-      }
-    }),
-    // Thanks: https://github.com/mishoo/UglifyJS2
-    new UglifyPlugin({
-      workCount: 2,
-      uglifyJS: {
-        'support-ie8': true
       }
     })
   ])
