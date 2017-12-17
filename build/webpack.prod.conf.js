@@ -1,4 +1,4 @@
-const { join, resolve } = require('path')
+const { join,resolve } = require('path')
 const webpack = require('webpack')
 
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -14,23 +14,39 @@ let name = Package.name
 module.exports = {
   entry: config.entries,
   output: {
-    path: join(root, 'dist'),
+    path: join(root,'dist'),
     filename: `js/[name].[hash:7].js`,
     publicPath: '/' // cdn path
   },
   resolve: {
-    extensions: ['.js', '.json', '.css', '.vue'],
+    extensions: ['.js','.json','.css','.vue'],
     alias: {
-      assets: join(root, '/src/assets'),
-      root: join(root, 'node_modules')
+      assets: join(root,'/src/assets'),
+      root: join(root,'node_modules')
     }
   },
   module: {
     rules: [
       {
         test: /\.js$/,
-        use: 'babel-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
+        use: [{
+          loader: 'babel-loader',
+          options: {
+            presets: [[
+              "env",
+              {
+                "targets": {
+                  "browsers": [
+                    "last 2 versions",
+                    "safari >= 7"
+                  ]
+                },
+                "loose": true
+              }
+            ]]
+          }
+        }],
       },
       {
         test: /\.css$/,

@@ -1,4 +1,4 @@
-const { join, resolve } = require('path')
+const { join,resolve } = require('path')
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
@@ -9,37 +9,48 @@ let config = require('./config')
 module.exports = {
   entry: config.entries,
   output: {
-    path: join(root, 'dist'),
+    path: join(root,'dist'),
     filename: 'js/[name].js',
     publicPath: '/'
   },
   resolve: {
-    extensions: ['.js', '.json', '.css', '.vue'],
+    extensions: ['.js','.json','.css','.vue'],
     alias: {
-      assets: join(root, '/src/assets'),
-      root: join(root, 'node_modules')
+      assets: join(root,'/src/assets'),
+      root: join(root,'node_modules')
     }
   },
   module: {
     rules: [
       {
         test: /\.js$/,
-        use: 'babel-loader',
-        exclude: /node_modules/
-      },
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader', {
-          loader: 'postcss-loader',
+        exclude: /node_modules/,
+        use: [{
+          loader: 'babel-loader',
           options: {
-            plugins: () => [require('autoprefixer')]
+            cacheDirectory: true,
+            presets: [[
+              "env",
+              {
+                "targets": {
+                  "browsers": [
+                    "last 2 versions",
+                    "safari >= 7"
+                  ]
+                },
+                "loose": true
+              }
+            ]]
           }
         }]
       },
       {
-        test: /\.html$/,
-        use: [{
-          loader: 'html-loader'
+        test: /\.css$/,
+        use: ['style-loader','css-loader',{
+          loader: 'postcss-loader',
+          options: {
+            plugins: () => [require('autoprefixer')]
+          }
         }]
       },
       {
@@ -62,6 +73,12 @@ module.exports = {
             name: 'fonts/[name].[hash:7].[ext]'
           }
         }]
+      },
+      {
+        test: /\.html$/,
+        use: [{
+          loader: 'html-loader'
+        }]
       }
     ]
   },
@@ -79,8 +96,8 @@ module.exports = {
     port: 8010
   },
   server: {
-	  proxy: {
-	    host: 'http://127.0.0.1',
+    proxy: {
+      host: 'http://127.0.0.1',
       match: /^\/api/
     }
   }

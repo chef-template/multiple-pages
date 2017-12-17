@@ -2,6 +2,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin')
 const glob = require('glob')
 const root = process.cwd()
+const path = require('path')
 
 let assets = require('./assets')
 
@@ -29,20 +30,25 @@ glob.sync('./src/pages/**/*.html').forEach(path => {
   let filename = title + '.html'
   let chunk = path.split('./src/pages/')[1].split('.html')[0]
   chunk = chunk.split('/').shift()
-    
+
   let htmlConf = {
     filename: filename,
     template: path,
     inject: 'body',
-    favicon: '',
-    chunks: ['vendors', chunk]
+    chunks: ['vendors',chunk]
   }
-  if(~appendChunks.indexOf(chunk)){
+  if (~appendChunks.indexOf(chunk)) {
     opts.files.push(filename)
   }
   plugins.push(new HtmlWebpackPlugin(htmlConf))
 })
-plugins.push(new HtmlWebpackIncludeAssetsPlugin(Object.assign({ assets }, opts)))
+
+plugins.push(new HtmlWebpackIncludeAssetsPlugin(Object.assign({ assets },{
+  append: false,
+  publicPath: '',
+  hash: false,
+  files: []
+})))
 
 module.exports = {
   entries,
